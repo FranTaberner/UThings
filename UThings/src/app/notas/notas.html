@@ -1,0 +1,49 @@
+<div class="editor-container">
+  <header class="editor-header">
+    <button class="btn-volver" (click)="volver()">← Volver</button>
+    <div class="info-nota">
+      <input class="input-titulo" [ngModel]="titulo()" (ngModelChange)="titulo.set($event); guardar()" [readonly]="!puedeEditar()" placeholder="Título...">
+      <span class="status">{{ estadoGuardado() }}</span>
+      <button class="btn-compartir" (click)="abrirModal()">Compartir 👤+</button>
+    </div>
+  </header>
+
+  <main class="editor-main">
+    <textarea [ngModel]="texto()" (ngModelChange)="texto.set($event); guardar()" [readonly]="!puedeEditar()" placeholder="Escribe aquí..."></textarea>
+  </main>
+
+  <div class="modal-overlay" *ngIf="mostrarModal()">
+    <div class="modal-content">
+      <h3>Compartir nota</h3>
+
+      <div class="form-group">
+        <input type="email" [ngModel]="nuevoColaboradorEmail()" (ngModelChange)="nuevoColaboradorEmail.set($event)" placeholder="Añadir email...">
+        <select [ngModel]="nuevoColaboradorPermiso()" (ngModelChange)="nuevoColaboradorPermiso.set($event)">
+          <option value="lectura">Lector</option>
+          <option value="edicion">Editor</option>
+        </select>
+        <button class="btn-add" (click)="confirmarCompartir()">Añadir</button>
+      </div>
+
+      <div class="lista-accesos">
+        <p class="label-seccion">Personas con acceso</p>
+
+        <div class="fila-acceso">
+          <span class="email-user">{{ autorOriginal() }} (Propietario)</span>
+        </div>
+
+        <div class="fila-acceso" *ngFor="let c of colaboradoresActuales()">
+          <span class="email-user">{{ c.email }}</span>
+          <select [ngModel]="c.permiso" (ngModelChange)="actualizarAcceso(c.email, $event)">
+            <option value="lectura">Lector</option>
+            <option value="edicion">Editor</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancelar" (click)="cerrarModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="login-container">
+  <h1>{{ esModoLogin() ? 'Iniciar Sesión' : 'Crear Cuenta' }}</h1>
+
+  <div class="form-group">
+    @if (!esModoLogin()) {
+      <input [(ngModel)]="username" placeholder="Nombre de usuario">
+    }
+
+    <input [(ngModel)]="email" type="email" placeholder="Correo electrónico">
+
+    <input [(ngModel)]="password" type="password" placeholder="Contraseña">
+
+    <button (click)="enviar()">
+      {{ esModoLogin() ? 'Entrar' : 'Registrarse' }}
+    </button>
+  </div>
+
+  <p class="toggle-text">
+    {{ esModoLogin() ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?' }}
+    <span (click)="alternarModo()">
+      {{ esModoLogin() ? 'Regístrate aquí' : 'Inicia sesión' }}
+    </span>
+  </p>
+
+  @if (mensaje()) {
+    <p class="mensaje" [class.error]="esModoLogin()" [class.exito]="!esModoLogin()">
+      {{ mensaje() }}
+    </p>
+  }
+</div>

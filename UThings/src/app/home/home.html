@@ -1,0 +1,54 @@
+<div class="home-container">
+  <header class="home-header">
+    <h1>Mis Notas</h1>
+    <div class="user-info">
+      <span>Hola, <strong>{{ apodo() }}</strong></span>
+      <button (click)="crearNuevaNota()" class="btn-nueva">Crear nota</button>
+      <button (click)="cerrarSesion()" class="btn-logout">Cerrar sesion</button>
+    </div>
+  </header>
+
+  <main class="grid-notas">
+    <div class="card-nota" *ngFor="let nota of misNotas()" (click)="abrirNota(nota.id)">
+      <h3>{{ nota.titulo }}</h3>
+      <p>{{ nota.contenido }}</p>
+      <div class="card-actions">
+        <button (click)="abrirModalCompartir($event, nota)" class="btn-icon">👥</button>
+        <button (click)="borrarNota($event, nota.id)" class="btn-icon btn-danger">🗑️</button>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" *ngIf="mostrarModal()">
+    <div class="modal-content">
+      <h3>Compartir: {{ notaSeleccionada()?.titulo }}</h3>
+
+      <div class="form-group">
+        <input type="email" [ngModel]="nuevoColaboradorEmail()" (ngModelChange)="nuevoColaboradorEmail.set($event)" placeholder="Email...">
+        <select [ngModel]="nuevoColaboradorPermiso()" (ngModelChange)="nuevoColaboradorPermiso.set($event)">
+          <option value="lectura">Lector</option>
+          <option value="edicion">Editor</option>
+        </select>
+        <button class="btn-add" (click)="confirmarCompartir()">Añadir</button>
+      </div>
+
+      <div class="lista-accesos">
+        <p class="label-seccion">Personas con acceso</p>
+        <div class="fila-acceso">
+          <span class="email-user">{{ notaSeleccionada()?.autorEmail }} (Propietario)</span>
+        </div>
+        <div class="fila-acceso" *ngFor="let c of notaSeleccionada()?.colaboradores">
+          <span class="email-user">{{ c.email }}</span>
+          <select [ngModel]="c.permiso" (ngModelChange)="actualizarAcceso(c.email, $event)">
+            <option value="lectura">Lector</option>
+            <option value="edicion">Editor</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancelar" (click)="cerrarModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
